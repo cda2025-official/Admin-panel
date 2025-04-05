@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     // This is a simple mock authentication
     // In a real app, you would validate credentials against a backend
-    if (username === "Decor@123" && password === "Decor123") {
+    if (username === "Decor@123" && password === "A9kL3") {
       localStorage.setItem("auth-token", "dummy-token")
       setIsAuthenticated(true)
       return true
