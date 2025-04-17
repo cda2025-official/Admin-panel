@@ -11,7 +11,6 @@ import {
   Youtube,
   Video,
   Home,
-  Image,
   FileText,
   Menu,
   X,
@@ -21,7 +20,9 @@ import {
   Calendar,
   Search,
   Database,
+  Download,
 } from "lucide-react"
+import * as XLSX from "xlsx"
 
 export default function MainPanel() {
   const [heroImages, setHeroImages] = useState([])
@@ -465,12 +466,12 @@ export default function MainPanel() {
 
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: <Home className="w-5 h-5" /> },
-    { id: "brand", label: "Brand Images", icon: <Image className="w-5 h-5" /> },
-    { id: "product", label: "Product Images", icon: <Image className="w-5 h-5" /> },
-    { id: "gallery", label: "Gallery Images", icon: <Image className="w-5 h-5" /> },
+    { id: "brand", label: "Brand Images", icon: <ImageIcon className="w-5 h-5" /> },
+    { id: "product", label: "Product Images", icon: <ImageIcon className="w-5 h-5" /> },
+    { id: "gallery", label: "Gallery Images", icon: <ImageIcon className="w-5 h-5" /> },
     { mainid: "broch", id: "brochures", label: "Brochures", icon: <FileText className="w-5 h-5" /> },
     { id: "youtube", label: "YouTube Videos", icon: <Youtube className="w-5 h-5" /> },
-    { id: "latest", label: "Latest Images", icon: <Image className="w-5 h-5" /> },
+    { id: "latest", label: "Latest Images", icon: <ImageIcon className="w-5 h-5" /> },
     { id: "leads", label: "Leads", icon: <Database className="w-5 h-5" /> },
   ]
 
@@ -722,6 +723,36 @@ export default function MainPanel() {
     setIsClicked(false)
   }
 
+  const exportToExcel = () => {
+    try {
+      // Create a new workbook and worksheet
+      const workbook = XLSX.utils.book_new()
+
+      // Format the data for Excel
+      const data = filteredVisitors.map((visitor) => ({
+        Name: visitor.name,
+        Phone: visitor.phone || "",
+        Email: visitor.email || "",
+        "Additional Info": (visitor.addInfo || "").replace(/\n/g, " "),
+        Type: visitor.type || "",
+        Date: formatDate(visitor.createdAt),
+      }))
+
+      // Convert data to worksheet
+      const worksheet = XLSX.utils.json_to_sheet(data)
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Leads")
+
+      // Generate Excel file and trigger download
+      XLSX.writeFile(workbook, "leads-export.xlsx")
+
+      alert("Leads exported successfully to Excel!")
+    } catch (error) {
+      console.error("Error exporting leads:", error)
+      alert("Error exporting leads. Please try again.")
+    }
+  }
   return (
     <>
       <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -1575,10 +1606,19 @@ export default function MainPanel() {
               {activeTab === "leads" && (
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
                   <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                    <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                      <User className="w-5 h-5 mr-2 text-blue-600" />
-                      Website Visitors
-                    </h2>
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+                        <User className="w-5 h-5 mr-2 text-blue-600" />
+                        Website Visitors
+                      </h2>
+                      <button
+                        onClick={exportToExcel}
+                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download Leads
+                      </button>
+                    </div>
                   </div>
                   <div className="p-6">
                     <div className="mb-6">
