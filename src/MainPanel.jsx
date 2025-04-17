@@ -37,13 +37,7 @@ export default function MainPanel() {
   const [thumbnailImages, setThumbnailImages] = useState([])
   const [loading, setLoading] = useState(false)
   const [productCategoriesState, setProductCategoriesState] = useState([])
-  const [brandNames, setBrandNames] = useState([
-    "CD Exclusive",
-    "Wall panelling",
-    "Exterior",
-    "Rafter",
-    "Laminates",
-  ])
+  const [brandNames, setBrandNames] = useState(["CD Exclusive", "Wall panelling", "Exterior", "Rafter", "Laminates"])
   const [selectedBrand, setSelectedBrand] = useState("")
   const [brandImageFiles, setBrandImageFiles] = useState([])
   const [youtubeLinks, setYoutubeLinks] = useState([])
@@ -192,6 +186,8 @@ export default function MainPanel() {
           videoId = youtubeInput.split("youtube.com/watch?v=")[1].split("&")[0]
         } else if (youtubeInput.includes("youtu.be/")) {
           videoId = youtubeInput.split("youtu.be/")[1].split("?")[0]
+        } else if (youtubeInput.includes("youtube.com/shorts/")) {
+          videoId = youtubeInput.split("youtube.com/shorts/")[1].split("?")[0]
         }
 
         if (videoId) {
@@ -1349,7 +1345,7 @@ export default function MainPanel() {
                               type="text"
                               value={youtubeInput}
                               onChange={(e) => setYoutubeInput(e.target.value)}
-                              placeholder="https://www.youtube.com/watch?v=..."
+                              placeholder="https://www.youtube.com/watch?v=... or https://youtube.com/shorts/..."
                               className="flex-1 p-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                             />
                             <button
@@ -1361,8 +1357,8 @@ export default function MainPanel() {
                           </div>
                         </label>
                         <p className="text-xs text-gray-500 mt-1">
-                          Paste a YouTube video URL (e.g., https://www.youtube.com/watch?v=XXXXXXXXXXX or
-                          https://youtu.be/XXXXXXXXXXX)
+                          Paste a YouTube video URL (e.g., https://www.youtube.com/watch?v=XXXXXXXXXXX,
+                          https://youtu.be/XXXXXXXXXXX, or https://youtube.com/shorts/XXXXXXXXXXX)
                         </p>
                       </form>
 
@@ -1692,4 +1688,3 @@ export default function MainPanel() {
 }
 
 export { MainPanel }
-
